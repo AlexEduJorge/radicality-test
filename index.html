@@ -236,6 +236,8 @@
     No sustituye a evaluación profesional ni debe usarse para decisiones que afecten los derechos de las personas.*
   </div>
   <script>
+    const invertidas = [3, 5, 8, 13, 18, 23]; // ítems invertidos (1-based index)
+
     function calcularResultado() {
       let total = 0;
       for (let i = 1; i <= 25; i++) {
@@ -243,7 +245,11 @@
         let answered = false;
         for (const r of radios) {
           if (r.checked) {
-            total += parseInt(r.value);
+            let val = parseInt(r.value);
+            if (invertidas.includes(i)) {
+              val = 6 - val; // invertir: 5→1, 4→2, 3→3, etc.
+            }
+            total += val;
             answered = true;
             break;
           }
@@ -255,19 +261,21 @@
       }
 
       const promedio = total / 25;
-      let resultado = "";
-
+      let interpretacion = "";
       if (promedio >= 4.1) {
-        resultado = "Tendencia radical alta.";
+        interpretacion = "Tendencia radical alta.";
       } else if (promedio >= 3.1) {
-        resultado = "Tendencia radical moderada.";
+        interpretacion = "Tendencia radical moderada.";
       } else if (promedio >= 2.1) {
-        resultado = "Tendencia abierta con matices.";
+        interpretacion = "Tendencia abierta con matices.";
       } else {
-        resultado = "Tendencia deliberativa y poco radical.";
+        interpretacion = "Tendencia deliberativa y poco radical.";
       }
 
-      document.getElementById("resultado").textContent = resultado;
+      document.getElementById("resultado").innerHTML =
+        "<strong>Resultado total:</strong> " + total + "/125<br>" +
+        "<strong>Promedio:</strong> " + promedio.toFixed(2) + " / 5<br>" +
+        "<strong>Interpretación:</strong> " + interpretacion;
     }
   </script>
 </body>
